@@ -1,0 +1,61 @@
+@startuml "Stock"
+
+class User{
+  + lastName: String  
+  + firstName: String  
+  + status: Boolean 
+  + deliver: Boolean 
+  + image: String  
+  + phone: String 
+  + email: String 
+  + emailVerifiedAt: Timestamp  
+  + password :   String 
+  + isDeliver()
+}
+
+class TypeOfOperation{
+  + label: String 
+}
+
+class Operation{
+  + quantity : Integer
+  + price : Integer
+  + label : String 
+  + observation : String 
+  + dateOfOperation : Date 
+  + enterInStock(Product product, int|float quantity)
+  + withdrawalFromStock(Product product, int|float quantity)
+  + inventoryOfTheStock(Product product, int|float quantity)
+  + inventoryAdjustment(Product product, int|float quantity)
+}
+
+class UnitOfMeasure{
+  + label : String 
+}
+
+class Product{
+  + label : String 
+  + safetyStock : Float 
+}
+
+abstract CreatedInformationTrait{
+  + createdAt : Date 
+  + createdBy : String   
+  + updatedAt : Date 
+  + updatedBy : String 
+}
+
+TypeOfOperation <|-- CreatedInformationTrait
+Product <|-- CreatedInformationTrait
+UnitOfMeasure <|-- CreatedInformationTrait
+Operation <|-- CreatedInformationTrait
+User <|-- CreatedInformationTrait
+
+Product "0..*" -- "1" UnitOfMeasure :Appartient
+Operation "0..*" --* "1" Product :Realise
+Operation "0..*" -- "1" TypeOfOperation :Appartient
+Operation "0..*" --* "1" User :Realise
+
+' Operation "1" *-- "many" TypeOfOperation : contains
+
+@enduml

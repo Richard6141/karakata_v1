@@ -1,0 +1,68 @@
+plantuml
+
+@startuml "Compte rendu"
+
+class CompteRendu {
+   ' - id : String
+   + date : date
+   ' TypeDocument TypeDocumentId
+   + startTime : Time
+   + hourEnd : Time 
+   + orderDay : String 
+  '  emplacement
+   + venue : String 
+  '  participants
+   + attendees : Array  
+   + content : String 
+   + Approved : String 
+   ' User UserId
+   CreatedInformationTrait
+
+   ValidateReport()
+   SendByMail()
+}
+
+CompteRendu <|-- UserList
+
+UserList : User[] attendees
+
+
+class User{
+'   String id 
+  String  name
+  String  firstname
+  Boolean status
+  Boolean islivreur
+  String  image
+  String phone
+  String email
+  Timestamp  emailVerifiedAt
+  String password
+  
+}
+
+
+class TypeDocument{
+   ' String id
+   + label : String
+   + description : String
+   CreatedInformationTrait
+}
+
+class CreatedInformationTrait{
+  + createdAt : Date 
+  + createdBy : String
+  + updatedAt : Date
+  + updatedBy : String
+}
+
+TypeDocument <|-- CreatedInformationTrait
+CompteRendu <|-- CreatedInformationTrait
+CreatedInformationTrait -- User
+
+CompteRendu "0..*" -- "1" User :Redige
+CompteRendu "0..*" -- "1" TypeDocument :Appartient
+' CreatedInformationTrait.> CompteRendu
+
+
+@enduml

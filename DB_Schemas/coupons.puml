@@ -1,0 +1,55 @@
+@startuml "Coupon"
+
+class Coupon{
+  String id
+  String couponUniqueCode
+  Client clientName
+  Client clientSurname
+  Client clientEmail
+  Client clientPhone
+  Integer couponValue
+  Date issueDate
+  Date expiryDate
+  Date dateOfUse
+  Boolean couponStatus
+  User createdBy
+  userWithCoupon()
+  userWithoutCoupon()
+  couponStillValid()
+  couponNoLongerValid()
+}
+
+class User{
+  String id 
+  String  name
+  String  firstname
+  Boolean status
+  Boolean islivreur
+  String  image
+  String phone
+  String email
+  Timestamp  emailVerifiedAt
+  String password
+  
+}
+
+class Customer{
+  String id
+  Class CreatedInformationTrait
+}
+
+class CreatedInformationTrait{
+  Date createdAt
+  User createdBy  
+  Date updatedAt
+  User updatedBy
+}
+
+'''Ajouter les multiplicités
+Customer <|--CreatedInformationTrait
+User --CreatedInformationTrait
+
+Coupon "0..*" -- "1" User : Created
+Coupon "0..*" -- "1" Customer : BelongTo
+
+@enduml

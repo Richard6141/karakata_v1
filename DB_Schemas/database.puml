@@ -1,0 +1,347 @@
+@startuml "DATABASE"
+
+class CreatedInformationTrait{
+    date createdAt
+    User createdBy
+    date updatedAt
+    User updatedBy
+}
+
+class TypeOrdered {
+    String label
+    Integer number
+    CreatedInformationTrait
+}
+
+class MethodPayment {
+    String label
+    CreatedInformationTrait
+}
+
+class SourceOrdered {
+    String label
+    CreatedInformationTrait
+}
+
+class Receiver {
+    String firstname
+    String lastname
+    Integer phone
+    CreatedInformationTrait
+}
+
+class AddressBook {
+    String address
+    CreatedInformationTrait
+}
+
+class Paquet {
+    String label
+    Date date
+    PaquetType paquetTypeId
+    Boolean status
+    Integer price
+    CreatedInformationTrait
+    publishPack()
+}
+
+class Order {
+    Date date
+    Integer number
+    Integer total
+    Integer unitPrice
+    Boolean statusOrder
+    Boolean statusLivraison
+    String descriptionLocation
+    TypeOrdered typeOrderedId
+    MethodPayment methodPaymentId
+    SourceOrdered sourceOrderedId
+    Receiver receiverId
+    Customer customerId
+    AddressBook addressbookId
+    Paquet paquetId
+    CreatedInformationTrait
+
+    SearchOrdered()
+    PrintInvoice()
+    PrintSlip()
+}
+
+class Coupon{
+  String id
+  String couponUniqueCode
+  Client clientName
+  Client clientSurname
+  Client clientEmail
+  Client clientPhone
+  Integer couponValue
+  Date issueDate
+  Date expiryDate
+  Date dateOfUse
+  Boolean couponStatus
+  User createdBy
+  userWithCoupon()
+  userWithoutCoupon()
+  couponStillValid()
+  couponNoLongerValid()
+}
+
+class User{
+  String id 
+  String  name
+  String  firstname
+  Boolean status
+  Boolean islivreur
+  String  image
+  String phone
+  String email
+  Timestamp  emailVerifiedAt
+  String password
+  
+}
+
+class Customer{
+  String id
+  String username
+  Boolean status
+  String  image
+  String phone
+  String email
+  Timestamp  emailVerifiedAt
+  String password
+  CreatedInformationTrait
+  Createcustomer()
+  customerhistory() 
+}
+
+class Particular{
+  String name
+  String firstname
+}
+
+class Company{
+  String socialReason
+}
+
+class CompteRendu {
+   String id
+   date date
+   TypeDocument TypeDocumentId
+   Time startTime
+   Time hourEnd
+   String orderDay
+  '  emplacement
+   String venue 
+  '  participants
+   Array attendees 
+   String content
+   User UserId
+   CreatedInformationTrait
+
+   ValidateReport()
+   SendByMail()
+}
+
+class TypeDocument{
+   String id
+   String label
+   String description
+   CreatedInformationTrait
+}
+
+class TypeOfOperation{
+  String id
+  String label
+  CreatedInformationTrait
+}
+
+class Operation{
+  String id
+  Product productId
+  TypeOfOperation typeOfOperationId
+  Integer quantity
+  Integer price
+  String label
+  String observation
+  Date dateOfOperation
+  CreatedInformationTrait
+  enterInStock()
+  withdrawalFromStock()
+  inventoryOfTheStock()
+  inventoryAdjustment()
+}
+
+class UnitOfMeasure{
+  String id
+  String label
+  CreatedInformationTrait
+}
+
+class Product{
+  String id
+  UnitOfMeasure unitOfMeasureId
+  String label
+  Float safetyStock
+  CreatedInformationTrait
+}
+
+class Suggestion {
+   String id
+   String preference
+   Client clientId
+   Source sourceId
+   User createdBy
+
+   ListByPeriod()
+}
+
+class Source {
+   String id
+   CreatedInformationTrait
+
+}
+
+class Delivery{
+  String id
+  User userId
+  Order orderId
+  String observation
+  Date dateOfDelivery
+  User createdBy
+  Boolean deliveryStatus
+  observations()
+  notDeliveredOrder()
+  deliveredOrder()
+  deliveryByUser()
+  deliveryPerDay()
+}
+
+class ComponentType {
+    String label
+    CreatedInformationTrait
+}
+
+class Component {
+    String label
+    String description
+    String image
+    Boolean status
+    Date publishDate
+    ComponentType componentTypeId
+    CreatedInformationTrait
+}
+
+class Paquet {
+    String label
+    Date date
+    PaquetType paquetTypeId
+    Boolean status
+    Integer price
+    CreatedInformationTrait
+    publishPack()
+}
+
+class PaquetType {
+    String label
+    Boolean status
+    CreatedInformationTrait
+}
+
+class Contenir {
+    Component componentId
+    Paquet paquetId
+}
+
+
+
+
+
+
+
+
+'
+'Compte rendu
+TypeDocument <|- CreatedInformationTrait
+CompteRendu <|- CreatedInformationTrait
+' CreatedInformationTrait -- User
+
+CompteRendu "0..*" -- "1" User :Redige
+CompteRendu "0..*" -- "1" TypeDocument :Appartient
+
+'Suggestion
+Source <|- CreatedInformationTrait
+Customer <|- CreatedInformationTrait
+
+Customer"1" -- "0..*" Suggestion :Suggère
+Source"1" -- "0..*" Suggestion :Appartient
+' CreatedInformationTrait..> Customer
+' CreatedInformationTrait..> Source
+' CreatedInformation..> User
+
+
+'Stock
+TypeOfOperation <|- CreatedInformationTrait
+Product <|- CreatedInformationTrait
+UnitOfMeasure <|- CreatedInformationTrait
+Operation <|- CreatedInformationTrait
+' TypeOfOperation <|- CreatedInformationTrait
+' CreatedInformationTrait -- User
+
+Product "0..*" -- "1" UnitOfMeasure :Appartient
+Operation "0..*" -- "1" Product :Realise
+Operation "0..*" -- "1" TypeOfOperation :Appartient
+Operation "0..*" -- "1" User :Realise
+
+'Coupon
+' Customer <|-CreatedInformationTrait
+' User --CreatedInformationTrait
+
+Coupon "0..*" -- "1" User : Created
+Coupon "0..*" -- "1" Customer : BelongTo
+
+'Livraison
+Order <|- CreatedInformationTrait
+' Customer <|-- CreatedInformationTrait
+' CreatedInformationTrait -- User
+
+Delivery "1" -- "1" Order : Fait
+Delivery "0..*" -- "1" User : Fait
+
+'Client
+CreatedInformationTrait -- User
+' Customer <|-- CreatedInformationTrait
+Particular <|-- Customer
+Company <|-- Customer
+
+'Order
+' Order <|--CreatedInformationTrait
+AddressBook <|-CreatedInformationTrait
+' Customer <|-CreatedInformationTrait
+Receiver <|-CreatedInformationTrait
+SourceOrdered <|-CreatedInformationTrait
+MethodPayment <|-CreatedInformationTrait
+TypeOrdered <|-CreatedInformationTrait
+Paquet <|-CreatedInformationTrait
+' CreatedInformationTrait -- User
+
+
+TypeOrdered "1" -- "1.*" Order : associate
+MethodPayment "1" -- "1.*" Order : associate
+SourceOrdered "1" -- "1.*" Order : associate
+Receiver "1" -- "0.*" Order : receive
+Customer "1" -- "1.*" Order : receive
+AddressBook "1" -- "1.*" Order : associate
+Paquet "1" -- "1.*" Order : associate
+
+
+'menu
+' Paquet <|--CreatedInformationTrait
+PaquetType <|--CreatedInformationTrait
+ComponentType <|--CreatedInformationTrait
+' CreatedInformationTrait -- User
+Component <|--CreatedInformationTrait
+ComponentType "1" -- "1.*" Component : associate
+Component "1" -- "1.*" Contenir : associate
+PaquetType "1" -- "1.*" Paquet : associate
+Paquet "1" -- "1.*" Contenir : associate
+@enduml

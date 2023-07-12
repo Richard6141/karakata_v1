@@ -1,0 +1,62 @@
+
+@startuml "Menu"
+
+class User{
+    + lastName: String
+    + firstName: String
+    + status: Boolean
+    + deliver: Boolean
+    + image: String
+    + phone: String
+    + email: String
+    + emailVerifiedAt: Timestamp
+    + password :   String
+    + isDeliver()
+}
+
+abstract CreatedInformationTrait{
+    + createdAt : Date
+    + createdBy : String
+    + updatedAt : Date
+    + updatedBy : String
+}
+
+class ComponentType {
+    + label : String
+}
+
+class Component {
+    + label : String
+    + description : String
+    + image : String
+    + status : Boolean
+    + publishDate : Date
+}
+
+class Paquet {
+    + label : String
+    + date : Date
+    + status : Boolean
+    + price : Integer
+    + publishPack()
+}
+
+class PaquetType {
+    + label : String
+    + status : Boolean
+}
+
+class Contenir {
+
+}
+
+Paquet <|--CreatedInformationTrait
+PaquetType <|--CreatedInformationTrait
+ComponentType <|--CreatedInformationTrait
+CreatedInformationTrait -- User
+Component <|--CreatedInformationTrait
+ComponentType "1" *-- "1.*" Component : associate
+Component "1" *-- "1.*" Contenir : associate
+PaquetType "1" *-- "1.*" Paquet : associate
+Paquet "1" *-- "1.*" Contenir : associate
+@enduml

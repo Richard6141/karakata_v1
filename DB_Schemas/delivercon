@@ -1,0 +1,660 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Order;
+use App\Models\Deliver;
+use App\Models\District;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Models\AvailableDeliver;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+
+class DeliverController extends Controller
+{
+    /**
+     * Undocumented function
+     *
+     * @return View
+     */
+    public function index()
+    {
+        $delivers = Deliver::all();
+
+        return view('delivers.index', [
+            'delivers' => $delivers,
+        ]);
+    }
+    // Liste des livreurs qui ont déjà effectué de livraisons
+    public function listDelivers(): View
+    {
+        $deliver = Order::where('deliver_id', '!=', null)
+            ->where('status_order', true)
+            ->where('status_delivery', false)
+            ->select('deliver_id')
+            ->get();
+        $delivers_id = [];
+        $delivers = [];
+
+        foreach ($deliver as $key => $value) {
+            array_push($delivers_id, $value->deliver_id);
+        }
+
+        foreach ($delivers_id as $deliver) {
+            $livreur = Deliver::where('id', $deliver)->first();
+            array_push($delivers, $livreur);
+        }
+
+        return view('delivers.listdelivers', [
+            'delivers' => $delivers,
+        ]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return View
+     */
+
+    public function add(): View
+    {
+        return view('delivers.add');
+    }
+
+    public function edit(Deliver $deliver): View
+    {
+        // $delivers = Deliver::where('id', $id)->first();
+        return view('delivers.edit', [
+            'delivers' => $deliver,
+        ]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return View
+     */
+    public function finished()
+    {
+        $delivers = AvailableDeliver::where('status', true)->get();
+        $date = date('Y-m-d');
+        $or = Order::where('deliver_id', null)
+            ->where('date', $date)
+            ->get();
+        $companies = DB::table('orders')
+            ->where('finished', false)
+            ->where('date', $date)
+            ->join('customers', 'customers.id', 'orders.customer_id')
+            ->join('companies', 'companies.id', 'customers.companies_id')
+            ->join('districts', 'districts.id', 'orders.district_id')
+            ->select(
+                'customers.*',
+                'companies.*',
+                'orders.*',
+                'districts.*',
+                'orders.id As order_id'
+            )
+            ->orderBy('customer_delivery_time', 'asc')
+            ->get()
+            ->toArray();
+
+        $particulars = DB::table('orders')
+            ->where('finished', false)
+            ->where('date', $date)
+            ->join('customers', 'customers.id', 'orders.customer_id')
+            ->join('particulars', 'particulars.id', 'customers.particulars_id')
+            ->join('districts', 'districts.id', 'orders.district_id')
+            ->select(
+                'customers.*',
+                'particulars.*',
+                'orders.*',
+                'districts.*',
+                'orders.id As order_id'
+            )
+            ->get()
+            ->toArray();
+
+        $orders = array_merge($companies, $particulars);
+        return view('delivers.unfinished', [
+            'delivers' => $delivers,
+            'orders' => $orders,
+        ]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return View
+     */
+
+    public function assignOrders()
+    {
+        $delivers = AvailableDeliver::where('status', true)->get();
+        $date = date('Y-m-d');
+        $or = Order::where('deliver_id', null)
+            ->where('date', $date)
+            ->get();
+        $companies = DB::table('orders')
+            ->where('deliver_id', null)
+            ->where('date', $date)
+            ->where('status_delivery', false)
+            ->join('customers', 'customers.id', 'orders.customer_id')
+            ->join('companies', 'companies.id', 'customers.companies_id')
+            ->join('districts', 'districts.id', 'orders.district_id')
+            ->select(
+                'customers.*',
+                'companies.*',
+                'orders.*',
+                'districts.*',
+                'orders.id As order_id'
+            )
+            ->orderBy('customer_delivery_time')
+            ->get()
+            ->toArray();
+
+        $particulars = DB::table('orders')
+            ->where('deliver_id', null)
+            ->where('date', $date)
+            ->where('status_delivery', false)
+            ->join('customers', 'customers.id', 'orders.customer_id')
+            ->join('particulars', 'particulars.id', 'customers.particulars_id')
+            ->join('districts', 'districts.id', 'orders.district_id')
+            ->select(
+                'customers.*',
+                'particulars.*',
+                'orders.*',
+                'districts.*',
+                'orders.id As order_id'
+            )
+            ->get()
+            ->toArray();
+
+        $orders = array_merge($companies, $particulars);
+        return view('delivers.assign', [
+            'delivers' => $delivers,
+            'orders' => $orders,
+        ]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return View
+     */
+
+    public function desassignOrders(Deliver $deliver)
+    {
+        // $delivers = Deliver::where('id', $id)->first();
+        $date = date('Y-m-d');
+        $name = DB::table('delivers')
+            ->select('delivers.firstname', 'delivers.lastname')
+            ->where('delivers.id', $deliver->id)
+            ->first();
+
+        $companies = DB::table('orders')
+            ->where('deliver_id', $deliver->id)
+            ->where('date', $date)
+            ->where('status_delivery', false)
+            ->join('customers', 'customers.id', 'orders.customer_id')
+            ->join('companies', 'companies.id', 'customers.companies_id')
+            ->join('districts', 'districts.id', 'orders.district_id')
+            ->select(
+                'customers.*',
+                'companies.*',
+                'orders.*',
+                'districts.*',
+                'orders.id As order_id'
+            )
+            ->orderBy('customer_delivery_time', 'asc')
+            ->get()
+            ->toArray();
+
+        $particulars = DB::table('orders')
+            ->where('deliver_id', $deliver->id)
+            ->where('date', $date)
+            ->where('status_delivery', false)
+            ->join('customers', 'customers.id', 'orders.customer_id')
+            ->join('particulars', 'particulars.id', 'customers.particulars_id')
+            ->join('districts', 'districts.id', 'orders.district_id')
+            ->select(
+                'customers.*',
+                'particulars.*',
+                'orders.*',
+                'districts.*',
+                'orders.id As order_id'
+            )
+            ->get()
+            ->toArray();
+
+        $orders = array_merge($companies, $particulars);
+
+        return view('delivers.desassign', [
+            'delivers' => $deliver,
+            'orders' => $orders,
+            'name' => $name,
+        ]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return View
+     */
+
+    public function delivery(Deliver $deliver)
+    {
+        // $delivers = Deliver::where('id', $id)->first();
+        $date = date('Y-m-d');
+        $name = DB::table('delivers')
+            ->select('delivers.firstname', 'delivers.lastname')
+            ->where('delivers.id', $deliver->id)
+            ->first();
+
+        $companies = DB::table('orders')
+            ->where('deliver_id', $deliver->id)
+            ->where('status_delivery', false)
+            ->where('date', $date)
+            ->join('customers', 'customers.id', 'orders.customer_id')
+            ->join('companies', 'companies.id', 'customers.companies_id')
+            ->join('districts', 'districts.id', 'orders.district_id')
+            ->select(
+                'customers.*',
+                'companies.*',
+                'orders.*',
+                'districts.*',
+                'orders.id As order_id'
+            )
+            ->orderBy('customer_delivery_time', 'asc')
+            ->get()
+            ->toArray();
+
+        $particulars = DB::table('orders')
+            ->where('deliver_id', $deliver->id)
+            ->where('status_delivery', false)
+            ->where('date', $date)
+            ->join('customers', 'customers.id', 'orders.customer_id')
+            ->join('particulars', 'particulars.id', 'customers.particulars_id')
+            ->join('districts', 'districts.id', 'orders.district_id')
+            ->select(
+                'customers.*',
+                'particulars.*',
+                'orders.*',
+                'districts.*',
+                'orders.id As order_id'
+            )
+            ->get()
+            ->toArray();
+
+        $orders = array_merge($companies, $particulars);
+        return view('delivers.delivery', [
+            'delivers' => $deliver,
+            'orders' => $orders,
+            'name' => $name,
+        ]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return View
+     */
+
+    public function deliveryRecover(Deliver $deliver)
+    {
+        // $delivers = Deliver::where('id', $id)->first();
+        $name = DB::table('delivers')
+            ->select('delivers.firstname', 'delivers.lastname')
+            ->where('delivers.id', $deliver->id)
+            ->first();
+
+        $companies = DB::table('orders')
+            ->where('deliver_id', $deliver->id)
+            ->where('status_delivery', true)
+            ->join('customers', 'customers.id', 'orders.customer_id')
+            ->join('companies', 'companies.id', 'customers.companies_id')
+            ->join('districts', 'districts.id', 'orders.district_id')
+            ->select(
+                'customers.*',
+                'companies.*',
+                'orders.*',
+                'districts.*',
+                'orders.id As order_id'
+            )
+            ->orderBy('customer_delivery_time', 'asc')
+            ->get()
+            ->toArray();
+
+        $particulars = DB::table('orders')
+            ->where('deliver_id', $deliver->id)
+            ->where('status_delivery', true)
+            ->join('customers', 'customers.id', 'orders.customer_id')
+            ->join('particulars', 'particulars.id', 'customers.particulars_id')
+            ->join('districts', 'districts.id', 'orders.district_id')
+            ->select(
+                'customers.*',
+                'particulars.*',
+                'orders.*',
+                'districts.*',
+                'orders.id As order_id'
+            )
+            ->get()
+            ->toArray();
+
+        $orders = array_merge($companies, $particulars);
+
+        return view('delivers.deliveryrecover', [
+            'delivers' => $deliver,
+            'orders' => $orders,
+            'name' => $name,
+        ]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return RedirectResponse
+     */
+
+    public function store(Request $request)
+    {
+        if ($request->email) {
+            $request->validate([
+                'email' => 'email',
+            ]);
+        }
+        $request->validate([
+            'lastname' => 'required|string',
+            'firstname' => 'required|string',
+            'phone' => 'required|max:15',
+        ]);
+
+        Deliver::create([
+            'id' => Str::uuid(),
+            'lastname' => $request->lastname,
+            'firstname' => $request->firstname,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'created_by' => Auth::user()->id ?? null,
+        ]);
+
+        $message = 'Livreur enregistré !';
+        return redirect()
+            ->route('delivers.index')
+            ->with('success', "$message");
+    }
+
+    public function updateDelivers(
+        Request $request,
+        Deliver $deliver
+    ): RedirectResponse {
+        try {
+            if ($request->email) {
+                $request->validate([
+                    'email' => 'email',
+                ]);
+            }
+            $request->validate([
+                'lastname' => 'required|string',
+                'firstname' => 'required|string',
+                'phone' => 'required|max:15',
+            ]);
+            Deliver::where('id', $deliver->id)->update([
+                'lastname' => $request->lastname,
+                'firstname' => $request->firstname,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'updated_by' => Auth::user()->id ?? null,
+            ]);
+            $message = 'Livreur modifié !';
+            return redirect()
+                ->route('delivers.index')
+                ->with('success', "$message");
+        } catch (\Throwable $th) {
+            $message = 'Livreur non modifié!';
+            return redirect()
+                ->route('delivers.index')
+                ->with('error', "$message");
+        }
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return RedirectResponse
+     */
+
+    public function destroyDeliver(Deliver $deliver)
+    {
+        // $deliver = Deliver::where('id', $id)->first();
+        if (!blank($deliver)) {
+            $commande = Order::where('deliver_id', $deliver->id)->first();
+            $availables = AvailableDeliver::where(
+                'deliver_id',
+                $deliver->id
+            )->first();
+            if (!blank($commande) || !blank($availables)) {
+                $message = 'Impossible de supprimé ce livreur!';
+                return redirect()
+                    ->route('delivers.index')
+                    ->with('error', "$message");
+            } else {
+                $deliver->delete();
+
+                $message = 'Livreur supprimée !';
+                return redirect()
+                    ->route('delivers.index')
+                    ->with('success', "$message");
+            }
+        } else {
+            $message = 'Impossible !';
+            return redirect()
+                ->route('delivers.index')
+                ->with('error', "$message");
+        }
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return RedirectResponse
+     */
+
+    public function assignOrder(Request $request)
+    {
+       
+        $request->validate([
+            'deliver_id' => ['required', 'string'],
+            'commande' => ['required', 'array'],
+        ]);
+        /** @var array $data*/
+        $data = $request->commande;
+
+            foreach ($data as $command) {
+
+                $commande = Order::where('id', $command)->first();
+                if($commande instanceof Order) {
+                $commande->update([
+                    'deliver_id' => $request->deliver_id,
+                    'created_by' => Auth::user()->id ?? null,
+                ]);
+                }
+
+
+                // $d->deliver_id =$deliver_id ;
+                // $d->created_by = Auth::user()->id ?? null;
+                // $d->save();
+            }
+            $message = 'Livraison  attribuée !';
+            return back()->with('success', "$message");
+        
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return RedirectResponse
+     */
+
+    public function desassignOrder(Request $request)
+    {
+        $request->validate([
+            'commande' => ['required', 'array'],
+        ]);
+
+        try {
+            $data = $request->commande;
+            /** @var array $data*/
+            
+                foreach ($data as $command) {
+                    $commande = Order::where('id', $command)->first();
+                    if($commande instanceof Order) {
+                        $commande->update([
+                        'deliver_id' => $request->deliver_id,
+                        'created_by' => Auth::user()->id ?? null,
+                    ]);
+                    }
+                    // $d->deliver_id = null;
+                    // $d->updated_by = Auth::user()->id ?? null;
+                    // $d->save();
+                }
+                $message = 'Livraison  désassignée !';
+                return back()->with('success', "$message");
+            
+        } catch (\Throwable $th) {
+            $message = 'Une erreur est subvenue !';
+            return back()->with('error', "$message");
+        }
+    }
+
+    public function manageDeliveryStatusTrue(
+        Request $request,
+        Deliver $deliver
+    ): RedirectResponse {
+        $request->validate([
+            'commande' => ['required', 'array'],
+        ]);
+        
+        try {
+            $time = date('H:i:s');
+            $data = $request->commande;
+            /** @var array $data*/
+            
+                foreach ($data as $command) {
+                $commande = Order::where('id', $command)->first();
+                if($commande instanceof Order) {
+                        $commande->update([
+                        'status_delivery' => true,
+                        'delivery_time' => $time,
+                        'updated_by' => Auth::user()->id ?? null,
+                ]);
+                }
+            }
+            $message = 'Livraison  effectuée !';
+            return back()->with('success', "$message");
+            
+        } catch (\Throwable $th) {
+            $message = 'Une erreur est subvenue !';
+            return back()->with('error', "$message");
+        }
+    }
+    /**
+     * Undocumented function
+     *
+     * @return RedirectResponse
+     */
+
+    public function manageDeliveryStatusFalse(
+        Request $request,
+        Deliver $deliver
+    ) {
+        $request->validate([
+            'commande' => ['required', 'array'],
+        ]);
+        try {
+            $data = $request->commande;
+            /** @var array $data*/
+            
+                foreach ($data as $command) {
+                $commande = Order::where('id', $command)->first();
+                
+                if($commande instanceof Order) {
+                    $commande->update([
+                        'status_delivery' => false,
+                        'delivery_time' => null,
+                        'updated_by' => Auth::user()->id ?? null,
+                    ]);
+                }
+
+                // $d->status_delivery = false;
+                // $d->updated_by = Auth::user()->id ?? null;
+                // $d->save();
+            }
+            $message = 'Livraison retirée !';
+            return back()->with('success', "$message");
+            
+            
+        } catch (\Throwable $th) {
+            $message = 'Une erreur est subvenue !';
+            return back()->with('error', "$message");
+        }
+    }
+
+    // public function listdeliver_order(string $id)
+    // {
+    //     $date = date('Y-m-d');
+    //     $deliver = Order::where('deliver_id', '!=', null)
+    //         ->where('date', $date)
+    //         ->get();
+    // }
+
+    /**
+     * Undocumented function
+     *
+     * @return View
+     */
+
+    public function listDeliversAvailable()
+    {
+        $date = date('Y-m-d');
+        $delivers = Deliver::all();
+        $delivers = DB::table('available_delivers As A')
+            ->join('delivers As B', 'A.deliver_id', 'B.id')
+            ->where('A.end_day', '<', $date)
+            ->select('B.*')
+            ->get();
+
+        $delivers = DB::table('delivers As A')
+            ->join('available_delivers As B', 'A.id', 'B.deliver_id')
+            ->where('B.end_day', '<', $date)
+            ->select('A.*')
+            ->get();
+        return view('delivers.available_delivers', [
+            'delivers' => Deliver::all(),
+        ]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return View
+     */
+
+    public function show(Deliver $deliver)
+    {
+        $orders = DB::table('orders')
+            ->where('deliver_id', $deliver->id)
+            ->where('status_delivery', true)
+            ->select('date', DB::raw('count(*) as total'))
+            ->orderBy('date', 'desc')
+            ->groupBy('date')
+            ->get();
+        return view('delivers.deliver_profil', [
+            'deliver' => $deliver,
+            'orders' => $orders,
+        ]);
+    }
+}

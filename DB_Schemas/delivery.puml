@@ -1,0 +1,56 @@
+@startuml "Livraisons"
+
+class Delivery{
+  String id
+  User userId
+  Order orderId
+  String observation
+  Date dateOfDelivery
+  User createdBy
+  Boolean deliveryStatus
+  observations()
+  notDeliveredOrder()
+  deliveredOrder()
+  deliveryByUser()
+  deliveryPerDay()
+}
+
+class User{
+  String id 
+  String  name
+  String  firstname
+  Boolean status
+  Boolean islivreur
+  String  image
+  String phone
+  String email
+  Timestamp  emailVerifiedAt
+  String password
+  
+}
+
+class Order{
+  String id
+  String label
+  CreatedInformationTrait
+}
+
+class CreatedInformationTrait{
+  Date createdAt
+  User createdBy  
+  Date updatedAt
+  User updatedBy
+}
+
+' Delivery<|-- Order
+' Delivery<|-- User
+
+'''Ajouter les multiplicités
+Order <|-- CreatedInformationTrait
+Customer <|-- CreatedInformationTrait
+CreatedInformationTrait -- User
+
+Delivery "1" -- "1" Order : Fait
+Delivery "0..*" -- "1" User : Fait
+
+@enduml

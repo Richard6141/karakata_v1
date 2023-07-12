@@ -1,0 +1,88 @@
+
+@startuml "Order"
+
+!function $pmax()
+
+!return "s"
+
+!endfunction
+
+class CreatedInformationTrait{
+    + createdAt : Date
+    + createdBy : String
+    + updatedAt : Date
+    + updatedBy : String
+}
+
+class TypeOrdered {
+    + label : String
+    + number : Integer
+}
+
+class MethodPayment {
+    + label : String
+}
+
+class SourceOrdered {
+    + label : String
+}
+
+class Receiver {
+    + firstname : String
+    + lastname : String
+    + phone : Integer
+}
+
+class Customer {
+    + firstname : String
+    + lastname : String
+    + phone : Integer
+    + Categorie : Integer
+}
+
+class AddressBook {
+    + address : String
+}
+
+class Paquet {
+    + label : String
+    + date : Date
+    + status : Boolean
+    + price : Integer
+    + publishPack()
+}
+
+class Order {
+    + date : Date
+    + number : Integer
+    + total : Integer
+    + unitPrice : Integer
+    + statusOrder : Boolean
+    + statusLivraison : Boolean
+    + descriptionLocation : String
+    + statusOrder : Boolean
+    + SearchOrdered(int|string number)
+    + PrintInvoice(Order order)
+    + PrintSlip(Order order)
+}
+
+Order <|--CreatedInformationTrait
+AddressBook <|--CreatedInformationTrait
+Customer <|--CreatedInformationTrait
+Receiver <|--CreatedInformationTrait
+SourceOrdered <|--CreatedInformationTrait
+MethodPayment <|--CreatedInformationTrait
+TypeOrdered <|--CreatedInformationTrait
+Paquet <|--CreatedInformationTrait
+CreatedInformationTrait -- User
+
+
+TypeOrdered "1" -- "1.*" Order : associate
+MethodPayment "1" -- "1.*" Order : associate
+SourceOrdered "1" -- "1.*" Order : associate
+Receiver "1" -- "0.*" Order : receive
+Customer "1" *-- "1.*" Order : receive
+AddressBook "1" -- "1.*" Order : associate
+Paquet "1" -- "1.*" Order : associate
+@enduml
+

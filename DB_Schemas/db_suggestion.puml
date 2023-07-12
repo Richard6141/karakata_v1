@@ -1,0 +1,66 @@
+plantuml
+
+@startuml "Suggestion"
+
+class User{
+  String id 
+  String  name
+  String  firstname
+  Boolean status
+  Boolean islivreur
+  String  image
+  String phone
+  String email
+  Timestamp  emailVerifiedAt
+  String password
+  
+}
+
+class Suggestion {
+   String id
+   String preference
+   Client clientId
+   Source sourceId
+   User createdBy
+
+   ListByPeriod()
+}
+class Customer{
+  String id
+  String username
+  Boolean status
+  String  image
+  String phone
+  String email
+  Timestamp  emailVerifiedAt
+  String password
+  CreatedInformationTrait
+  Createcustomer()
+  customerhistory() 
+}
+
+class Source {
+   String id
+   CreatedInformationTrait
+
+}
+
+class CreatedInformationTrait{
+  Date createdAt
+  User createdBy  
+  Date updatedAt
+  User updatedBy
+}
+
+Source <|-- CreatedInformationTrait
+Customer <|-- CreatedInformationTrait
+CreatedInformationTrait -- User
+
+Customer"1" -- "0..*" Suggestion :Suggère
+Source"1" -- "0..*" Suggestion :Appartient
+CreatedInformationTrait..> Client
+CreatedInformationTrait..> Source
+CreatedInformationTrait..> User
+
+
+@enduml

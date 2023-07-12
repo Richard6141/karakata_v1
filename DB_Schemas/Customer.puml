@@ -1,0 +1,48 @@
+@startuml "Customers"
+
+
+
+class Customer{
+  String id
+  String username
+  Boolean status
+  String  image
+  String phone
+  String email
+  Timestamp  emailVerifiedAt
+  String password
+  CreatedInformationTrait
+  Createcustomer()
+  customerhistory() 
+}
+
+class Particular{
+  String name
+  String firstname
+}
+
+class Company{
+  String socialReason
+}
+
+abstract CreatedInformationTrait{
+  Date createdAt
+  User createdBy  
+  Date updatedAt
+  User updatedBy
+}
+
+CreatedInformationTrait -- User
+Customer <|-- CreatedInformationTrait
+Particular <|-- Customer
+Company <|-- Customer
+
+' Company "0..1" -"1..*"  Particular:Représenté par
+
+
+' (Particular, Company) .. Customer
+
+
+
+
+@enduml
