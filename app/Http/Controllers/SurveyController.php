@@ -54,9 +54,7 @@ class SurveyController extends Controller
 
         $urvey = new Survey();
         $urvey->id = Str::uuid();
-        $survey->user_id = "ea92c69d-c1a9-4f6e-a3df-d1528127fb7e";
-        $urvey->save();
-        dd('ok');
+        $survey->user_id = Auth::user()->id;
         $urvey->age = $request->age;
         $urvey->sexe = $request->sexe;
         $urvey->location = $request->location;
@@ -77,7 +75,6 @@ class SurveyController extends Controller
         $urvey->which_improvment_fonctionality = $request->which_improvment_fonctionality;
         $urvey->phone = $request->phone ?? null;
         $urvey->save();
-        dd('ok');
         
         // $survey = Survey::create(
         //     [
