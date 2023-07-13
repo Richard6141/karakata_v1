@@ -58,9 +58,9 @@ License: You must have a valid license purchased only from themeforest(the above
             </ul>
           </div>
         <div class="footer-copyright">
-            <div class="container"><span>&copy; 2022 <a
+            <div class="container"><span>&copy; 2023 <a
                         href="javascript:;"
-                        target="_blank">TOP FOOD</a> Tous les droits sont réservés.</span></div>
+                        target="_blank">KARAKATA SA</a> Tous les droits sont réservés.</span></div>
         </div>
     </footer>
 
@@ -71,5 +71,5 @@ License: You must have a valid license purchased only from themeforest(the above
 <script>
     document.addEventListener('DOMContentLoaded', function() {
     var elems = document.querySelectorAll('.modal');
-    var instances = M.Modal.init(elems, dismissible = false);}
+    var instances = M.Modal.init(elems, dismissible = false);})
 </script>

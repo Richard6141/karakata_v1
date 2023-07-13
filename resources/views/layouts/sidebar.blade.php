@@ -27,7 +27,7 @@
     @if (auth()->user()->hasRole('ADMINISTRATEUR'))
     <li class="bold "><a class="{{ request()->is('page-users-list') ? 'active' : '' }} waves-effect waves-cyan " href="{{ route('user.list') }}"><i class="material-icons">account_circle</i><span class="menu-title" data-i18n="Mail">Utilisateurs<span class="new badge blue" style="font-weight: bold; font-size: large" data-badge-caption="">{{ countUser() }}
     @endif
-                    {{-- <li class="bold"><a class="collapsible-header waves-eff
+    <li class="bold"><a class="collapsible-header waves-eff
         {{-- <li class="bold"><a class="collapsible-header waves-effect waves-cyan " href="JavaScript:void(0)"><i
                     class="material-icons">ect waves-cyan " href="JavaScript:void(0)"><i
                                     class="material-icons"></span></span></a>
@@ -35,14 +35,14 @@
         {{-- <li class="bold "><a class="{{ request()->is('delivers') ? 'active' : '' }} waves-effect waves-cyan "
                     href="{{ route('delivers.index') }}"><i class="material-icons">account_circle</i><span class="menu-title" data-i18n="Mail">Clients</span></a>
     </li> --}}
-    <li class="bold"><a class="{{ request()->is('list_composants') ? 'active' : '' }}  || {{ request()->is('list_packs') ? 'active' : '' }} collapsible-header " href="JavaScript:void(0)"><i class="material-icons">account_circle</i><span class="menu-title" data-i18n="Dashboard">Enquêtes</span></a>
+    <li class="bold"><a class="{{ request()->is('show.survey') ? 'active' : '' }}  || {{ request()->is('survey.form') ? 'active' : '' }} collapsible-header " href="JavaScript:void(0)"><i class="material-icons">account_circle</i><span class="menu-title" data-i18n="Dashboard">Enquêtes</span></a>
         <div class="collapsible-body">
             <ul class="collapsible collapsible-sub" data-collapsible="accordion">
 
-                <li class="bold"><a class="{{ request()->is('customer') ? 'active' : '' }} waves-effect waves-cyan " href="{{ route('customer.index') }}"><i class="material-icons">account_circle</i><span class="menu-title" data-i18n="Mail">Liste</span></a>
+                <li class="bold"><a class="{{ request()->is('show.survey') ? 'active' : '' }} waves-effect waves-cyan " href="{{ route('show.survey') }}"><i class="material-icons">account_circle</i><span class="menu-title" data-i18n="Mail">Liste</span></a>
 
                 </li>
-                <li class="bold"><a class="{{ request()->is('customerdepot') ? 'active' : '' }} waves-effect waves-cyan " href="{{ route('customerdepot.index') }}"><i class="material-icons">account_circle</i><span class="menu-title" data-i18n="Mail"> Nouveau</span></a>
+                <li class="bold"><a class="{{ request()->is('survey.form') ? 'active' : '' }} waves-effect waves-cyan " href="{{ route('survey.form') }}"><i class="material-icons">account_circle</i><span class="menu-title" data-i18n="Mail"> Nouveau</span></a>
 
                 <!-- </li>
                 <li class="bold"><a class=" {{ request()->is('reportlist') ? 'active' : '' }} waves-effect waves-cyan " href="{{ route('suggestion.index') }}"><i class="material-icons">add_circle_outline</i><span class="menu-title" data-i18n="Mail">Suggestions</span></a>
@@ -54,7 +54,7 @@
 
 
 
-    <li class="bold"><a class="{{ request()->is('list_type_composants') ? 'active' : '' }} || {{ request()->is('liste-composants') ? 'active' : '' }} || {{ request()->is('list_packs') ? 'active' : '' }} collapsible-header " href="JavaScript:void(0)"><i class="material-icons">cake</i><span class="menu-title" data-i18n="Dashboard">Menus</span></a>
+    <!-- <li class="bold"><a class="{{ request()->is('list_type_composants') ? 'active' : '' }} || {{ request()->is('liste-composants') ? 'active' : '' }} || {{ request()->is('list_packs') ? 'active' : '' }} collapsible-header " href="JavaScript:void(0)"><i class="material-icons">cake</i><span class="menu-title" data-i18n="Dashboard">Menus</span></a>
         <div class="collapsible-body">
             <ul class="collapsible collapsible-sub" data-collapsible="accordion">
 
@@ -157,7 +157,7 @@
                 </li>
             </ul>
         </div>
-    </li>
+    </li> -->
     </ul>
 
     <div class="navigation-background"></div><a class="sidenav-trigger btn-sidenav-toggle btn-floating btn-medium waves-effect waves-light hide-on-large-only" href="#" data-target="slide-out"><i class="material-icons">menu</i></a>

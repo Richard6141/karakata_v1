@@ -137,6 +137,12 @@ class HomeController extends Controller
         return response()->json($data);
     }
 
+    public function allresults(){
+        $requestes::all();
+
+        return view ('requestform.general_list', ['enquetes' => $requestes]);
+    }
+
     public function orderPerdateCanva(): JsonResponse
     {
         $orders = Order::where('finished', true)->get();

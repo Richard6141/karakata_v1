@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\AddressBook;
 use Carbon\Carbon;
 use App\Models\Pack;
 use App\Models\User;
@@ -8,14 +7,16 @@ use App\Models\Order;
 use App\Models\Client;
 use App\Models\Coupon;
 use App\Models\Paquet;
+use App\Models\Survey;
 use App\Models\Contain;
 use App\Models\Contenir;
+use App\Models\Receiver;
 use App\Models\Brouillon;
 use App\Models\Component;
 use App\Models\Composants;
 use App\Models\PaquetType;
+use App\Models\AddressBook;
 use App\Models\AvailableDeliver;
-use App\Models\Receiver;
 use Illuminate\Support\Facades\DB;
 
 function upload($request)
@@ -438,4 +439,42 @@ function import_CSV1($filename, $delimiter = ';')
         fclose($handle);
     }
     return $data;
+}
+
+function todaywork (){
+    $date = date('Y-m-d');
+    $results = Survey::where('user_id', '=', Auth::user()->id)
+            // ->where('status_survey', true)
+            ->whereDate('created_at', '=', Carbon::today()->toDateString())
+            // ->select('deliver_id')
+            ->get()->count();
+
+    return $results;
+}
+
+function todaywork_date() {
+    return date('Y-m-d');
+}
+
+function my_survey() {
+    $my_results = Survey::where('user_id', '=', Auth::user()->id)
+            ->get()->count();
+
+    return $my_results;
+}
+
+function today_survey() {
+    $today_survey = Survey::where('user_id', Auth::user()->id)->whereDate('created_at', '=', Carbon::today()->toDateString())
+            // ->select('deliver_id')
+            ->get()->count();
+
+    return $today_survey;
+}
+
+function all_today_survey() {
+    $today_survey = Survey::whereDate('created_at', '=', Carbon::today()->toDateString())
+            // ->select('deliver_id')
+            ->get()->count();
+
+    return $today_survey;
 }

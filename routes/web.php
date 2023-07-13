@@ -56,7 +56,8 @@ use App\Http\Controllers\AvailableDeliverController;
 Route::get('/', function () {
     return redirect()->route('home');
     $users = User::all();
-    return view('welcome', ['users' => $users]);
+    
+    return view('home', ['users' => $users, 'results' => $results, 'date' =>$date]);
 })->middleware('auth');
 
 Auth::routes();
@@ -602,6 +603,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/statistics1', [HomeController::class, 'pack'])->name('statistics1');
     Route::get('/statistics2', [HomeController::class, 'orderPerdateCanva'])->name('statistics2');
 
-    Route::get('/survey/register', [SurveyController::class, 'index'])->name('survey');
+    Route::get('/survey/register', [SurveyController::class, 'index'])->name('survey.form');
     Route::post('/survey/submit', [SurveyController::class, 'create'])->name('create.survey');
+    Route::get('/survey/liste', [SurveyController::class, 'show_general_surveyliste'])->name('show.survey');
+    Route::get('/survey/my_today/survey', [SurveyController::class, 'list_per_surveyer'])->name('list.surveyer');
+    Route::get('/survey/all/results', [HomeController::class, 'allresults'])->name('survey.all');
 });
