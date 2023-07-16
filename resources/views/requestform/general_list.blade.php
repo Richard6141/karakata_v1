@@ -51,7 +51,12 @@
                                             <table id="data-table-simple" class="display" style="width: 100%;">
                                                 <thead>
                                                     <tr style="color:black">
+                                                        @if (auth()->user()->hasRole('ADMINISTRATEUR') || auth()->user()->hasRole('DIRECTEUR'))
                                                         <th style="text-align: left;">Enquêteur</th>
+                                                        @endif
+                                                        @if (auth()->user()->hasRole('COMMERCIAL'))
+                                                        <th style="text-align: left;">Nom</th>
+                                                        @endif
                                                         <th style="text-align: left;">Sexe</th>
                                                         <th style="text-align: left;">Age</th>
                                                         <th style="text-align: left;">Location</th>
@@ -66,11 +71,21 @@
                                                 <tbody>
                                                     @foreach ($enquetes as $enquete)
                                                         <tr>
+                                                            @if (auth()->user()->hasRole('ADMINISTRATEUR') || auth()->user()->hasRole('DIRECTEUR'))
+                                                    
                                                             <td style="text-align: left"><span>
                                                                     {{$enquete->user->firstname ?? 'N/A'}}
                                                                     {{$enquete->user->name ?? 'N/A'}}
                                                                     
                                                                 </span></td>
+                                                                @endif
+                                                                @if (auth()->user()->hasRole('COMMERCIAL'))
+                                                    
+                                                            <td style="text-align: left"><span>
+                                                                    {{$enquete->name ?? 'N/A'}}
+                                                                    
+                                                                </span></td>
+                                                                @endif
                                                             <td style="text-align: left">
                                                                 <span>{{ $enquete->sexe ?? 'N/A' }}</span></td>
                                                                 <td ><span>{{ $enquete->age ?? 'N/A' }}</span></td>
@@ -91,47 +106,14 @@
                                                            @if (auth()->user()->hasRole('ADMINISTRATEUR') || auth()->user()->hasRole('DIRECTEUR'))
                                                             <td style="text-align: right">
                                                                 <div class="invoice-action">
-                                                                        <a id="editBtn"
-                                                                            href="{{ route('commande.show', $enquete->id) }}"
-                                                                            class="invoice-action-edit modal-trigger tooltipped"
-                                                                            data-position="top" data-tooltip="Modifier"
-                                                                            data-id="{{ $enquete->id }}"
-                                                                            data-Nom_client="{{ $enquete->Nom_client }}"
-                                                                            data-pack="{{ $enquete->pack->label ?? '' }}"
-                                                                            data-date_livraison="{{ $enquete->date_livraison }}"
-                                                                            data-description="{{ $enquete->description }}"
-                                                                            data-nombre="{{ $enquete->nombre }}"
-                                                                            data-total="{{ $enquete->total }}"
-                                                                            data-source_commande="{{ $enquete->source_commande }}"
-                                                                            data-url="{{ route('commande.updatecommande', $enquete->id) }}">
-                                                                            <i class="material-icons"
-                                                                                style="color:green ;">edit</i>
-                                                                        </a>
 
-                                                                        <a id="suporderBtn" href="{{route('view.survey', $enquete->id)}}">
+                                                                        <a href="{{route('view.survey', $enquete->id)}}">
                         
                                                                             <i class="material-icons tooltipped"
                                                                                 style="color:green " data-position="top"
                                                                                 data-tooltip="Voir plus">visibility</i>
                                                                         </a>
 
-                                                                        <!-- <a data-idcommande="{{ $enquete->id }}"
-                                                                            id="confBtn" href="javascript:;"
-                                                                            class="invoice-action-edit modal-trigger tooltipped"
-                                                                            data-position="top" data-tooltip="Cliquez pour finaliser tout le processus ">
-                                                                            <i class="material-icons"
-                                                                                style="color:rgb(151, 8, 132);">lock_outline</i>
-                                                                        </a> -->
-                                                                        <!-- <a data-idcommande="{{ $enquete->id }}"
-                                                                            id="activlivrBtn" href="javascript:;"
-                                                                            class="invoice-action-edit modal-trigger tooltipped"
-                                                                            data-position="top"
-                                                                            data-tooltip="Cliquez pour valider la livraison">
-
-                                                                            <i class="material-icons"
-                                                                                style="color:rgb(7, 109, 109) ;">local_grocery_store
-                                                                            </i>
-                                                                        </a>-->
                                                                         @if($enquete->status == false)
                                                                         <a href="{{ route('validate.survey', $enquete->id )}}"
                                                                             

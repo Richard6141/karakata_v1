@@ -30,8 +30,6 @@ class SurveyController extends Controller
         $request->validate([
             'age' => 'required|string',
             'sexe' => 'required',
-            'phone' => 'required',
-            'name' => 'required',
             'location' => 'required',
             'profession' => 'required',
             'online_payment' => 'required',
@@ -58,6 +56,8 @@ class SurveyController extends Controller
         $urvey->id = Str::uuid();
         $urvey->user_id = Auth::user()->id;
         $urvey->age = $request->age;
+        $urvey->phone = $request->phone;
+        $urvey->name = $request->name;
         $urvey->sexe = $request->sexe;
         $urvey->location = $request->location;
         $urvey->profession = $request->profession;

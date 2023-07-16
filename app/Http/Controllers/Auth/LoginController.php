@@ -53,7 +53,7 @@ class LoginController extends Controller
      */
     protected function authenticated($user)
     {
-        $agent = User::where('email', $user->email)->first();
+        $agent = User::where('email', $user->email)->orWhere('phone', $user->phone)->first();
         $role = $agent->roles[0] ?? null;
         if ($role == null) {
             Auth::logout();

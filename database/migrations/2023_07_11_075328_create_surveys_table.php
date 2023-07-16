@@ -22,9 +22,10 @@ return new class extends Migration
             $table->string('sexe');
             $table->string('location');
             $table->string('profession');
+            $table->integer('phone')->defaut('00229');
             $table->boolean('online_payment');
-            $table->string('why_not_paid');
-            $table->string('which_product');
+            $table->string('why_not_paid')->nullable();
+            $table->string('which_product')->nullable();
             $table->string('payment_frequency');
             $table->json('payment_obstacles');
             $table->string('payment_method')->nullable();
@@ -37,7 +38,6 @@ return new class extends Migration
             $table->string('online_payment_defi');
             $table->text('yes_online_payment_if_resolve');
             $table->string('which_improvment_fonctionality');
-            $table->integer('phone')->nullable();
             $table->boolean('status')->default(false);
             $table->timestamps();
         });

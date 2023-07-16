@@ -18,10 +18,12 @@ class ExportSurveyResult implements FromCollection, WithHeadings
         return [
             'id',
             'enqueteur',
+            'name',
             'age',
             'sexe',
             'location',
             'profession',
+            'phone',
             'Online payment',
             'why_not_paid',
             'which_product',
@@ -37,7 +39,6 @@ class ExportSurveyResult implements FromCollection, WithHeadings
             'online_payment_defi',
             'yes_online_payment_if_resolve',
             'which_improvment_fonctionality',
-            'phone',
             'Date enregistrement',
             // Ajoutez les noms des colonnes de votre table ici
         ];

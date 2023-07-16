@@ -45,7 +45,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
     <footer
         class="page-footer footer footer-static footer-dark gradient-45deg-indigo-purple gradient-shadow navbar-border navbar-shadow">
-        <div class="fixed-action-btn">
+        <!-- <div class="fixed-action-btn">
             <a class="btn-floating btn-large red">
               <i class="large material-icons">mode_edit</i>
             </a>
@@ -56,7 +56,7 @@ License: You must have a valid license purchased only from themeforest(the above
               <li><a class="btn-floating red" href="{{ route('commande.index') }}"><i class="material-icons tooltipped" data-position="left" data-tooltip="Commandes">local_mall</i></a></li>
               <li><a class="btn-floating blue" href="{{ route('delivers.assign') }}"><i class="material-icons tooltipped" data-position="left" data-tooltip="Livraisons">account_circle</i></a></li>
             </ul>
-          </div>
+          </div> -->
         <div class="footer-copyright">
             <div class="container"><span>&copy; 2023 <a
                         href="javascript:;"

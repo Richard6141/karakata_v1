@@ -87,7 +87,7 @@
                             <div class="row margin">
                                 <div class="input-field col s12">
                                     <i class="material-icons prefix pt-2">person_outline</i>
-                                    <input id="email" type="email" name="email">
+                                    <input id="email" type="text" name="email">
                                     <label for="email" class="center-align">Email</label>
                                 </div>
                             </div>
