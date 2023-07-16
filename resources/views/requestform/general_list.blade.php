@@ -28,13 +28,20 @@
                 </div>
             </div>
         </div>
+        @if (auth()->user()->hasRole('ADMINISTRATEUR') || auth()->user()->hasRole('DIRECTEUR'))
+        <a href="{{ route('export.export') }}"
+                        class="waves-effect waves-light btn gradient-45deg-deep-purple- z-depth-4 mt-2 mr-2 right">Exporter</a>
+                        @endif
     </div>
+    
     <div class="col s12">
+        
         <div class="container">
             <div class="section">
                 <div class="card">
                     <div class="card-content">
                         <p class="caption mb-0">
+                            
                         <section class="users-list-wrapper section">
                             <div class="users-list-table">
                                 <div class="card">
@@ -49,15 +56,19 @@
                                                         <th style="text-align: left;">Age</th>
                                                         <th style="text-align: left;">Location</th>
                                                         <th>Profession</th>
+                                                        <th>Status</th>
                                                         <!-- <th style="text-align: center">Phone</th> -->
+                                                        @if (auth()->user()->hasRole('ADMINISTRATEUR') || auth()->user()->hasRole('DIRECTEUR'))
                                                         <th style="text-align: right">Actions</th>
+                                                        @endif
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($enquetes as $enquete)
                                                         <tr>
                                                             <td style="text-align: left"><span>
-                                                                    Richard salanon
+                                                                    {{$enquete->user->firstname ?? 'N/A'}}
+                                                                    {{$enquete->user->name ?? 'N/A'}}
                                                                     
                                                                 </span></td>
                                                             <td style="text-align: left">
@@ -67,7 +78,17 @@
                                                             <td> <span>{{ $enquete->profession ?? '' }}</span>
                                                             <!-- <td> <span>{{ $enquete->phone ?? '' }}</span> -->
                                                             </td>
-                                                           
+                                                            @if($enquete->status == false)
+                                                            <td> <span class="new badge gradient-45deg-light-red-cyan"
+                                                                        data-badge-caption=""
+                                                                        style="font-weight: bold">Non valide</span></td>
+                                                           @endif
+                                                            @if($enquete->status == true)
+                                                            <td> <span class="new badge gradient-45deg-light-green-cyan"
+                                                                        data-badge-caption=""
+                                                                        style="font-weight: bold">Valide</span></td>
+                                                           @endif
+                                                           @if (auth()->user()->hasRole('ADMINISTRATEUR') || auth()->user()->hasRole('DIRECTEUR'))
                                                             <td style="text-align: right">
                                                                 <div class="invoice-action">
                                                                         <a id="editBtn"
@@ -87,12 +108,11 @@
                                                                                 style="color:green ;">edit</i>
                                                                         </a>
 
-                                                                        <a id="suporderBtn" href="javascript:;"
-                                                                            class="invoice-action-edit modal-trigger"
-                                                                            data-pack="{{ $enquete->id }}">
+                                                                        <a id="suporderBtn" href="{{route('view.survey', $enquete->id)}}">
+                        
                                                                             <i class="material-icons tooltipped"
-                                                                                style="color:red " data-position="top"
-                                                                                data-tooltip="Supprimer">delete</i>
+                                                                                style="color:green " data-position="top"
+                                                                                data-tooltip="Voir plus">visibility</i>
                                                                         </a>
 
                                                                         <!-- <a data-idcommande="{{ $enquete->id }}"
@@ -102,7 +122,7 @@
                                                                             <i class="material-icons"
                                                                                 style="color:rgb(151, 8, 132);">lock_outline</i>
                                                                         </a> -->
-                                                                        <a data-idcommande="{{ $enquete->id }}"
+                                                                        <!-- <a data-idcommande="{{ $enquete->id }}"
                                                                             id="activlivrBtn" href="javascript:;"
                                                                             class="invoice-action-edit modal-trigger tooltipped"
                                                                             data-position="top"
@@ -111,26 +131,36 @@
                                                                             <i class="material-icons"
                                                                                 style="color:rgb(7, 109, 109) ;">local_grocery_store
                                                                             </i>
-                                                                        </a>
-                                                                        <a data-idcommande="{{ $enquete->id }}"
-                                                                            id="activcomBtn" href="javascript:;"
-                                                                            class="invoice-action-edit modal-trigger tooltipped"
+                                                                        </a>-->
+                                                                        @if($enquete->status == false)
+                                                                        <a href="{{ route('validate.survey', $enquete->id )}}"
+                                                                            
                                                                             data-position="top"
-                                                                            data-tooltip="Cliquez pour valider la Commande">
+                                                                            data-tooltip="Cliquez pour valider l'enquête">
                                                                             <i class="material-icons"
                                                                                 style="color:green">beenhere</i>
-                                                                        </a>
-                                                                    
-                                                                    <a href="{{ route('generate.pdf', ['id' => $enquete->id]) }}"
+                                                                        </a> 
+                                                                    @endif
+                                                                    @if($enquete->status == true)
+                                                                    <a href="{{ route('validate.survey', $enquete->id )}}"
+                                                                            
+                                                                            data-position="top"
+                                                                            data-tooltip="Cliquez pour invalider l'enquête">
+                                                                            <i class="material-icons"
+                                                                                style="color:red">beenhere</i>
+                                                                        </a> 
+                                                                    @endif
+                                                                    <!-- <a href="{{ route('generate.pdf', ['id' => $enquete->id]) }}"
                                                                         target="_blank"><i
                                                                             class="material-icons tooltipped"
                                                                             data-position="top"
                                                                             data-tooltip="Cliquez pour imprimer la commande">print</i></a>
-                                                                    
+                                                                     -->
                                                                       
 
                                                                 </div>
                                                             </td>
+                                                            @endif
                                                         </tr>
                                                     @endforeach
                                                 </tbody>

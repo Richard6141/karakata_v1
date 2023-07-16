@@ -478,3 +478,8 @@ function all_today_survey() {
 
     return $today_survey;
 }
+function allsurvey() {
+    $today_survey = Survey::all()->count();
+
+    return $today_survey;
+}

@@ -149,7 +149,6 @@
                   <option value="Manque de confiance dans les plateformes de paiement en ligne">Manque de confiance dans les plateformes de paiement en ligne</option>
                   <option value="Problèmes de connectivité Internet">Problèmes de connectivité Internet</option>
                   <option value="Difficulté à effectuer des remboursements ou à résoudre les problèmes liés aux paiements en ligne">Difficulté à effectuer des remboursements ou à résoudre les problèmes liés aux paiements en ligne</option>
-                  <option value="Autre (veuillez préciser)">Autre (veuillez préciser)</option>
                 </select>
                 @error('payment_obstacles')
                     <small class="red-text ml-7" role="alert">
@@ -165,7 +164,6 @@
                   <option value="Portefeuilles mobiles (par exemple, VISA , Mastercard ,Moov Money, MTN Mobile Money)">Portefeuilles mobiles (par exemple, VISA , Mastercard ,Moov Money, MTN Mobile Money)</option>
                   <option value="Services bancaires en ligne">Services bancaires en ligne</option>
                   <option value="Paiement en espèce">Paiement en espèce</option>
-                  <option value="Autre (veuillez préciser)">Autre (veuillez préciser)</option>
                 </select>
                 @error('payment_method')
                     <small class="red-text ml-7" role="alert">
@@ -253,7 +251,6 @@
                   <option value="Sécurité accrue des transactions">Sécurité accrue des transactions</option>
                   <option value="Accès à un plus large éventail de produits et services">Accès à un plus large éventail de produits et services</option>
                   <option value="Meilleure traçabilité des dépenses">Meilleure traçabilité des dépenses</option>
-                  <option value="Autre (veuillez préciser)">Autre (veuillez préciser)</option>
                 </select>
                 @error('online_payment_advantage')
                     <small class="red-text ml-7" role="alert">

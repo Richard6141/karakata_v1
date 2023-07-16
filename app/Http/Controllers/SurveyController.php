@@ -85,9 +85,19 @@ class SurveyController extends Controller
     }
 
     public function show_general_surveyliste(){
+        if(Auth::user()->hasRole('ADMINISTRATEUR')){
         $requestes = Survey::all();
+        return view ('requestform.general_list', ['enquetes' => $requestes]);
+
+        }else{
+        $requestes = Survey::where('user_id', '=', Auth::user()->id)
+            // ->where('status_survey', true)
+            ->whereDate('created_at', '=', Carbon::today()->toDateString())
+            // ->select('deliver_id')
+            ->get();
 
         return view ('requestform.general_list', ['enquetes' => $requestes]);
+        }
     }
 
     public function list_per_surveyer(){
@@ -96,6 +106,50 @@ class SurveyController extends Controller
             ->whereDate('created_at', '=', Carbon::today()->toDateString())
             // ->select('deliver_id')
             ->get();
+    }
+
+    public function validate_survey($id){
+        
+        $survey = Survey::find($id);
+        if($survey->status == false){
+            $survey->status = true;
+            $survey->save();
+            $message = 'Enquête validée !';
+            return redirect()
+                ->route('show.survey')
+                ->with('success', "$message");
+        }
+        $message = 'Enquete invalidée !';
+        $survey->status = false;
+            $survey->save();
+            return redirect()
+                ->route('show.survey')
+                ->with('success', "$message");
+    }
+
+    function my_result(){
+        $results = Survey::where('user_id', '=', Auth::user()->id)
+            // ->where('status_survey', true)
+            // ->whereDate('created_at', '=', Carbon::today()->toDateString())
+            // ->select('deliver_id')
+            ->get();
+             return view ('requestform.own_list', ['enquetes'=>$results]);
+    }
+
+    function today_result(){
+        $results = Survey::whereDate('created_at', '=', Carbon::today()->toDateString())
+            // ->where('status_survey', true)
+            // ->whereDate('created_at', '=', Carbon::today()->toDateString())
+            // ->select('deliver_id')
+            ->get();
+             return view ('requestform.today_result', ['enquetes'=>$results]);
+    }
+
+    public function view_survey($id){
+        // dd('survey');
+        $request = Survey::find($id);
+        // dd($request->age);
+        return view('requestform.survey_view',['request'=>$request]);
     }
     /**
      * Store a newly created resource in storage.

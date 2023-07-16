@@ -51,7 +51,7 @@
                                             <table id="data-table-simple" class="display" style="width: 100%;">
                                                 <thead>
                                                     <tr style="color:black">
-                                                        <th style="text-align: left;">Date</th>
+                                                        <th style="text-align: left;">Enquêteur</th>
                                                         <th style="text-align: left;">Sexe</th>
                                                         <th style="text-align: left;">Age</th>
                                                         <th style="text-align: left;">Location</th>
@@ -67,7 +67,8 @@
                                                     @foreach ($enquetes as $enquete)
                                                         <tr>
                                                             <td style="text-align: left"><span>
-                                                                    {{$enquete->created_at ?? 'N/A'}}
+                                                                    {{$enquete->user->firstname ?? 'N/A'}}
+                                                                    {{$enquete->user->name ?? 'N/A'}}
                                                                     
                                                                 </span></td>
                                                             <td style="text-align: left">

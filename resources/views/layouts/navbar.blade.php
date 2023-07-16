@@ -6,7 +6,7 @@
         </div>
         <ul class="navbar-list right">
             <li class="hide-on-large-only search-input-wrapper"><a class="waves-effect waves-block waves-light search-button" href="javascript:void(0);"><i class="material-icons">search</i></a></li>
-            @if (auth()->user()->hasRole('ADMINISTRATEUR') || auth()->user()->hasRole('DIRECTEUR'))
+            @if (auth()->user()->hasRole('ADMINISTRATEUR'))
             <li><a class="waves-effect waves-block waves-light notification-button" href="javascript:void(0);" data-target="notifications-dropdown"><i class="material-icons">notifications_none<small class="notification-badge">{{ all_today_survey() }}</small></i></a></li>
             @endif
             @if (auth()->user()->hasRole('COMMERCIAL'))

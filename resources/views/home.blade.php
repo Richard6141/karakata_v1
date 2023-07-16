@@ -25,7 +25,7 @@
                </div>
             </div>
          </div>
-         <a href="#">
+         <a href="{{route('show.survey')}}">
          <div class="col s12 m6 l6 xl3">
             <div class="card gradient-45deg-red-pink gradient-shadow min-height-100 white-text animate fadeLeft">
                <div class="padding-4">
@@ -43,7 +43,7 @@
                </div>
             </div>
          </div></a>
-        <a href="#"></a>
+        <a href="{{route('own.survey')}}">
          <div class="col s12 m6 l6 xl3">
             <div class="card gradient-45deg-green-teal gradient-shadow min-height-100 white-text animate fadeRight">
                <div class="padding-4">
@@ -81,6 +81,24 @@
                </div>
             </div>
          </div></a>
+         <a href="{{ route('today.survey')}}">
+         <div class="col s12 m6 l6 xl3">
+            <div class="card gradient-45deg-green-teal gradient-shadow min-height-100 white-text animate fadeRight">
+               <div class="padding-4">
+                  <div class="row">
+                     <div class="col s7 m7">
+                        <i class="material-icons background-round mt-5">attach_money</i>
+                        <p>Aujourd'hui</p>
+                     </div>
+                     <div class="col s5 m5 right-align">
+                        <h5 class="mb-0 white-text">{{all_today_survey()}}</h5>
+                        <p class="no-margin">Tous</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div></a>
+
          <a href="{{ route('show.survey')}}">
          <div class="col s12 m6 l6 xl3">
             <div class="card gradient-45deg-green-teal gradient-shadow min-height-100 white-text animate fadeRight">
@@ -91,7 +109,7 @@
                         <p>Les résultats</p>
                      </div>
                      <div class="col s5 m5 right-align">
-                        <h5 class="mb-0 white-text">{{today_survey()}}</h5>
+                        <h5 class="mb-0 white-text">{{allsurvey()}}</h5>
                         <p class="no-margin">Tous</p>
                      </div>
                   </div>

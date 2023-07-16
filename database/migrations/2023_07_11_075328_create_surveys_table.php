@@ -17,6 +17,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->string('name');
             $table->string('age');
             $table->string('sexe');
             $table->string('location');
@@ -37,6 +38,7 @@ return new class extends Migration
             $table->text('yes_online_payment_if_resolve');
             $table->string('which_improvment_fonctionality');
             $table->integer('phone')->nullable();
+            $table->boolean('status')->default(false);
             $table->timestamps();
         });
     }

@@ -45,8 +45,8 @@
 
                             <div class="row">
                                 <div class="input-field col s12 center" style="">
-                                    <img src="	https://web.topfood.bj/images/LogotTF.png" alt="logo top food"
-                                        style="width:80%; height: 80%; margin-left: auto; margin-right: auto">
+                                    <img src="{{ asset('logo/logo_karakata.png') }}" alt="logo top food"
+                                        style="width:20%; height: 20%; margin-left: auto; margin-right: auto">
                                     <h5 class="ml-4" style="font-weight: bold strong"><strong>Connexion</strong></h5>
                                 </div>
                             </div>
